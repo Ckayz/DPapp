@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Park</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Welcome to Double Park</h1>
+
+    <!-- Main selection buttons -->
+    <div id="mainMenu">
+        <button onclick="showRegister()">Register</button>
+        <button onclick="showSearch()">Search</button>
+    </div>
+
+    <!-- Registration form (hidden by default) -->
+    <div id="registerForm" style="display: none;">
+        <h2>Register</h2>
+        <input id="plateRegister" placeholder="Plate number" required>
+        <input id="contactRegister" placeholder="Contact" required>
+        <button onclick="registerPlate()">Register</button>
+        <button onclick="showMainMenu()">Back</button>
+    </div>
+
+    <!-- Search form (hidden by default) -->
+    <div id="searchForm" style="display: none;">
+        <h2>Search</h2>
+        <input id="plateSearch" placeholder="Search plate number" required>
+        <button onclick="searchPlate()">Search</button>
+        <p id="searchResult"></p>
+        <button onclick="showMainMenu()">Back</button>
+    </div>
+
+    <script>
+        function showRegister() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('searchForm').style.display = 'none';
+        }
+
+        function showSearch() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('searchForm').style.display = 'block';
+        }
+
+        function showMainMenu() {
+            document.getElementById('mainMenu').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('searchForm').style.display = 'none';
+        }
+        function registerPlate() {
+            const plate = document.getElementById('plateRegister').value;
+            const contact = document.getElementById('contactRegister').value;
+
+            fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ plate, contact })
+            }).then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    alert(data.error);
+                } else {
+                    alert(data.message);
+                }
+            });
+                }
+
+                function searchPlate() {
+                    const plate = document.getElementById('plateSearch').value;
+
+                    fetch(`http://localhost:3000/search/${plate}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const searchResult = document.getElementById('searchResult');
+                        if (data.error) {
+                            searchResult.textContent = "Plate not found!";
+                        } else {
+                            searchResult.textContent = `Contact for plate ${plate}: ${data.contact}`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was an error fetching the plate:', error);
+                        alert('Error occurred while searching. Please try again.');
+                    });
+                }
+        
+    </script>
+</body>
+</html>

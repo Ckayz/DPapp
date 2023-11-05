@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif; 
+    height: 100vh; 
+    margin: 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-direction: column; 
+    background-color: #f7f7f7; 
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+div {
+    margin: 20px 0;
+}
+
+button:not(:last-child) {
+    margin-bottom: 10px;
+}
